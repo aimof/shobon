@@ -15,20 +15,18 @@ func printBooon(height, width int) {
 		fmt.Println("Need more space to fly!")
 		return
 	}
-	line := []rune(kaomoji.BOOON + strings.Repeat(" ", width-kaomoji.BOOON_WIDTH))
+	line := []rune(" " + kaomoji.BOOON + strings.Repeat(" ", width-kaomoji.BOOON_WIDTH-1))
 
 	for loop := 0; loop < 3; loop++ {
 		for i := 0; i < len(line); i++ {
-			fmt.Print("\x1b[2J")
+			fmt.Print("\x1b[1J")
 			fmt.Print("\x1b[" + strconv.Itoa(height/2+1) + ";1H")
 			if i == 0 {
 				fmt.Print(string(line) + "\n")
 			} else {
-				fmt.Print(string(line[len(line)-i:]) + string(line[0:len(line)-i]) + "\n")
+				fmt.Print(string(line[len(line)-i:]) + string(line[0:len(line)-i]))
 			}
-			if height > 2 {
-				fmt.Print(strings.Repeat("\n", height-(height/2)-2))
-			}
+			fmt.Print("\x1b[" + strconv.Itoa(height-1) + ";1H")
 			time.Sleep(25 * time.Millisecond)
 		}
 	}
