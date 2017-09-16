@@ -15,15 +15,16 @@ func printBooon(height, width int) {
 		fmt.Println("Need more space to fly!")
 		return
 	}
-	row := kaomoji.BOOON + strings.Repeat(" ", width-kaomoji.BOOON_WIDTH-1)
+	line := []rune(kaomoji.BOOON + strings.Repeat(" ", width-kaomoji.BOOON_WIDTH))
+
 	for loop := 0; loop < 3; loop++ {
-		for i := 0; i < len(row); i++ {
+		for i := 0; i < len(line); i++ {
 			fmt.Print("\x1b[2J")
 			fmt.Print("\x1b[" + strconv.Itoa(height/2+1) + ";1H")
 			if i == 0 {
-				fmt.Print(row)
+				fmt.Print(string(line) + "\n")
 			} else {
-				fmt.Print(row[len(row)-i:] + row[0:len(row)-i-1] + "\n")
+				fmt.Print(string(line[len(line)-i:]) + string(line[0:len(line)-i]) + "\n")
 			}
 			if height > 2 {
 				fmt.Print(strings.Repeat("\n", height-(height/2)-2))
@@ -67,9 +68,9 @@ func printManyShobon(height, width int) {
 	for i := 0; i < height-1; i++ {
 		fmt.Print("\x1b[1J")
 		fmt.Print("\x1b[1;1H")
-		if width > len(kaomoji.SHOBON_ORIGINAL)+2 {
-			x := rand.Intn(width - len(kaomoji.SHOBON_ORIGINAL) - 2)
-			indents = append(indents, strings.Repeat(" ", x))
+		if width > kaomoji.SHOBON_ORIGINAL_WIDTH+2 {
+			x := rand.Intn(width - kaomoji.SHOBON_ORIGINAL_WIDTH - 1)
+			indents = append(indents, strings.Repeat(" ", x+1))
 		}
 		if *reverseOption {
 			fmt.Print(strings.Repeat("\n", height-i-2))
@@ -108,7 +109,7 @@ func printTooManyShobon(height, width int) {
 				strings.Repeat(" ", space1),
 				strings.Repeat(" ", space2),
 			}
-			var line string = ""
+			var line string = strings.Repeat(" ", (width%3)/2)
 			for _, indent := range indents {
 				line = line + indent + kaomoji.SHOBON_ORIGINAL
 			}
@@ -125,7 +126,7 @@ func printTooManyShobon(height, width int) {
 				strings.Repeat(" ", space2),
 				strings.Repeat(" ", space3),
 			}
-			var line string = ""
+			var line string = strings.Repeat(" ", (width%4)/2)
 			for _, indent := range indents {
 				line = line + indent + kaomoji.SHOBON_ORIGINAL
 			}
