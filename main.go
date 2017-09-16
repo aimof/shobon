@@ -30,6 +30,8 @@ func printManyShobon(height, width int) {
 	rand.Seed(time.Now().UnixNano())
 	var indents = make([]string, 0, height)
 	for i := 0; i < height; i++ {
+		fmt.Print("\x1b[1J")
+		fmt.Print("\x1b[1;1H")
 		if width > len(kaomoji.SHOBON_ORIGINAL)+2 {
 			x := rand.Intn(width - len(kaomoji.SHOBON_ORIGINAL) - 2)
 			indents = append(indents, strings.Repeat(" ", x))
