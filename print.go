@@ -88,6 +88,66 @@ func printManyShobon(height, width int) {
 
 }
 
+func printTooManyShobon(height, width int) {
+	if width < kaomoji.SHOBON_ORIGINAL_WIDTH*5 {
+		fmt.Println("This terminal is too narrow to gether.")
+		fmt.Println(strings.Repeat(kaomoji.SHOBON_ORIGINAL, width))
+		return
+	}
+	rand.Seed(time.Now().UnixNano())
+	var lines []string = make([]string, 0, height)
+	for i := 0; i < height-2; i++ {
+		fmt.Print("\x1b[1J")
+		fmt.Print("\x1b[1;1H")
+		if i%2 == 0 {
+			space0 := rand.Intn(width/3 - kaomoji.SHOBON_ORIGINAL_WIDTH + 1)
+			space1 := rand.Intn(width/3-kaomoji.SHOBON_ORIGINAL_WIDTH+1) + width/3 - space0 - kaomoji.SHOBON_ORIGINAL_WIDTH
+			space2 := rand.Intn(width/3-kaomoji.SHOBON_ORIGINAL_WIDTH+1) + width*2/3 - space0 - space1 - kaomoji.SHOBON_ORIGINAL_WIDTH*2
+			indents := []string{
+				strings.Repeat(" ", space0),
+				strings.Repeat(" ", space1),
+				strings.Repeat(" ", space2),
+			}
+			var line string = ""
+			for _, indent := range indents {
+				line = line + indent + kaomoji.SHOBON_ORIGINAL
+			}
+			line = line + "\n"
+			lines = append(lines, line)
+		} else {
+			space0 := rand.Intn(width/4 - kaomoji.SHOBON_ORIGINAL_WIDTH + 1)
+			space1 := rand.Intn(width/4-kaomoji.SHOBON_ORIGINAL_WIDTH+1) + width/4 - space0 - kaomoji.SHOBON_ORIGINAL_WIDTH
+			space2 := rand.Intn(width/4-kaomoji.SHOBON_ORIGINAL_WIDTH+1) + width/2 - space0 - space1 - kaomoji.SHOBON_ORIGINAL_WIDTH*2
+			space3 := rand.Intn(width/4-kaomoji.SHOBON_ORIGINAL_WIDTH+1) + width*3/4 - space0 - space1 - space2 - kaomoji.SHOBON_ORIGINAL_WIDTH*3
+			indents := []string{
+				strings.Repeat(" ", space0),
+				strings.Repeat(" ", space1),
+				strings.Repeat(" ", space2),
+				strings.Repeat(" ", space3),
+			}
+			var line string = ""
+			for _, indent := range indents {
+				line = line + indent + kaomoji.SHOBON_ORIGINAL
+			}
+			line = line + "\n"
+			lines = append(lines, line)
+		}
+
+		if *reverseOption {
+			fmt.Print(strings.Repeat("\n", height-i-3))
+			for j := range lines {
+				fmt.Print(lines[j])
+			}
+		} else {
+			for j := range lines {
+				fmt.Print(lines[i-j])
+			}
+			fmt.Print(strings.Repeat("\n", height-i-3))
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
 func printDefaultShobon(height, width int) {
 	var x int = 0
 	if width > kaomoji.SHOBON_WIDTH {
