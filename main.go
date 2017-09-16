@@ -21,6 +21,8 @@ func main() {
 		printJumpingShobon(height, width)
 	case *manyOption:
 		printManyShobon(height, width)
+	case *tooManyOption:
+		printTooManyShobon(height, width)
 	default:
 		printDefaultShobon(height, width)
 	}
