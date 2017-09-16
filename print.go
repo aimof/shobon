@@ -3,10 +3,39 @@ package main
 import (
 	"fmt"
 	"github.com/aimof/shobon/kaomoji"
+	"math"
 	"math/rand"
 	"strings"
 	"time"
 )
+
+func printJumpingShobon(height, width int) {
+	if height < 2*kaomoji.SHOBON_HEIGHT {
+		fmt.Println("sorry, your terminal is too small to jump.")
+		return
+	}
+	var x int = 0
+	if width > kaomoji.SHOBON_WIDTH {
+		x = (width - kaomoji.SHOBON_WIDTH) / 2
+	}
+	if height < 8 {
+		printShobon(x, 0, 8)
+	} else {
+		for jump := 0; jump < 10; jump++ {
+			highest := float64(height - kaomoji.SHOBON_HEIGHT)
+			for i := height - kaomoji.SHOBON_HEIGHT - 1; i >= 0; i-- {
+				var shobonHeight float64 = float64(height - kaomoji.SHOBON_HEIGHT - i)
+				printShobon(x, i, height)
+				time.Sleep(time.Duration(math.Pow((shobonHeight-highest/2)/(highest/2), 2) * float64(40*time.Millisecond)))
+			}
+			for i := 0; i < height-kaomoji.SHOBON_HEIGHT-1; i++ {
+				var shobonHeight float64 = float64(height - kaomoji.SHOBON_HEIGHT - i)
+				printShobon(x, i, height)
+				time.Sleep(time.Duration(math.Pow((shobonHeight-highest/2)/(highest/2), 2) * float64(40*time.Millisecond)))
+			}
+		}
+	}
+}
 
 func printManyShobon(height, width int) {
 	rand.Seed(time.Now().UnixNano())
