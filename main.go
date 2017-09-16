@@ -12,22 +12,10 @@ import (
 )
 
 func main() {
-	cmd := exec.Command("stty", "size")
-	cmd.Stdin = os.Stdin
-	rawSize, err := cmd.Output()
+	height, width, err := measureSize()
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
-	size := strings.Split(string(rawSize), " ")
-	height, err := strconv.Atoi(size[0])
-	if err != nil {
-		log.Fatalln(err)
-	}
-	width, err := strconv.Atoi(strings.Split(size[1], "\n")[0])
-	if err != nil {
-		log.Fatalln(err)
-	}
-
 	var x int
 	if width > 74 {
 		x = (width - 74) / 2
@@ -40,6 +28,25 @@ func main() {
 			time.Sleep(150 * time.Millisecond)
 		}
 	}
+}
+
+func measureSize() (height, width int, err error) {
+	cmd := exec.Command("stty", "size")
+	cmd.Stdin = os.Stdin
+	rawSize, err := cmd.Output()
+	if err != nil {
+		return 0, 0, err
+	}
+	size := strings.Split(string(rawSize), " ")
+	height, err = strconv.Atoi(size[0])
+	if err != nil {
+		return 0, 0, err
+	}
+	width, err = strconv.Atoi(strings.Split(size[1], "\n")[0])
+	if err != nil {
+		return 0, 0, err
+	}
+	return height, width, nil
 }
 
 func printShobon(x, y, height int) {
