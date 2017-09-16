@@ -15,6 +15,8 @@ func main() {
 		log.Println(err)
 	}
 	switch {
+	case *booonOption:
+		printBooon(height, width)
 	case *jumpOption:
 		printJumpingShobon(height, width)
 	case *manyOption:
