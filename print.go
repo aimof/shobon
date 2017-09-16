@@ -5,9 +5,33 @@ import (
 	"github.com/aimof/shobon/kaomoji"
 	"math"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 )
+
+func printBooon(height, width int) {
+	if width < 2*kaomoji.BOOON_WIDTH {
+		fmt.Println("Need more space to fly!")
+		return
+	}
+	row := kaomoji.BOOON + strings.Repeat(" ", width-kaomoji.BOOON_WIDTH-1)
+	for loop := 0; loop < 3; loop++ {
+		for i := 0; i < len(row); i++ {
+			fmt.Print("\x1b[2J")
+			fmt.Print("\x1b[" + strconv.Itoa(height/2+1) + ";1H")
+			if i == 0 {
+				fmt.Print(row)
+			} else {
+				fmt.Print(row[len(row)-i:] + row[0:len(row)-i-1] + "\n")
+			}
+			if height > 2 {
+				fmt.Print(strings.Repeat("\n", height-(height/2)-2))
+			}
+			time.Sleep(25 * time.Millisecond)
+		}
+	}
+}
 
 func printJumpingShobon(height, width int) {
 	if height < 2*kaomoji.SHOBON_HEIGHT {
