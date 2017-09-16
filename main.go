@@ -28,16 +28,24 @@ func main() {
 
 func printManyShobon(height, width int) {
 	rand.Seed(time.Now().UnixNano())
-	var indents = make([]string, height, height)
+	var indents = make([]string, 0, height)
 	for i := 0; i < height; i++ {
 		if width > len(kaomoji.SHOBON_ORIGINAL)+2 {
 			x := rand.Intn(width - len(kaomoji.SHOBON_ORIGINAL) - 2)
-			indents[i] = strings.Repeat(" ", x)
+			indents = append(indents, strings.Repeat(" ", x))
 		}
-		for j := 0; j < i; j++ {
-			fmt.Print(indents[i-j] + kaomoji.SHOBON_ORIGINAL + "\n")
+		if *reverseOption {
+			fmt.Print(strings.Repeat("\n", height-i-1))
+			for j := range indents {
+				fmt.Print(indents[j] + kaomoji.SHOBON_ORIGINAL + "\n")
+			}
+		} else {
+			for j := range indents {
+				fmt.Print(indents[i-j] + kaomoji.SHOBON_ORIGINAL + "\n")
+			}
+			fmt.Print(strings.Repeat("\n", height-i-1))
 		}
-		fmt.Print(strings.Repeat("\n", height-i-1))
+
 		time.Sleep(time.Millisecond * 150)
 	}
 
@@ -52,7 +60,11 @@ func printDefaultShobon(height, width int) {
 		printShobon(x, 0, 8)
 	} else {
 		for i := 0; i < height-kaomoji.SHOBON_HEIGHT; i++ {
-			printShobon(x, i, height)
+			if *reverseOption {
+				printShobon(x, height-kaomoji.SHOBON_HEIGHT-i-1, height)
+			} else {
+				printShobon(x, i, height)
+			}
 			time.Sleep(150 * time.Millisecond)
 		}
 	}
