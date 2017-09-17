@@ -15,23 +15,52 @@ func printBooon(height, width int) {
 		fmt.Println("Need more space to fly!")
 		return
 	}
+
 	line := []rune(kaomoji.BOOON + strings.Repeat(" ", width-kaomoji.BOOON_WIDTH))
+	positions := make([][2]int, 0, height/10)
+	var linesPerBooon int = 0
+	if *tooManyOption {
+		linesPerBooon = 3
+	} else if *manyOption {
+		linesPerBooon = 10
+	}
+	if linesPerBooon > 1 && height > 20 {
+		for booon := 0; booon < height/linesPerBooon; booon++ {
+			positions = append(positions, [2]int{
+				rand.Intn(len(line)) + 1,
+				rand.Intn(linesPerBooon) + booon*linesPerBooon + 1,
+			})
+		}
+	} else {
+		positions = append(positions, [2]int{
+			0,
+			height/2 - 1,
+		})
+	}
 
 	for loop := 0; loop < 3; loop++ {
 		for i := 0; i < len(line); i++ {
 			fmt.Print("\x1b[2J")
-			fmt.Print("\x1b[" + strconv.Itoa(height/2+1) + ";1H")
-			if i == 0 {
-				fmt.Print(string(line) + "\n")
-			} else {
-				fmt.Print(string(line[len(line)-i:]) + string(line[0:len(line)-i]) + "\n")
+			for _, position := range positions {
+				booonFlies(line, (position[0]-i+len(line))%len(line), position[1])
 			}
-			if height > 2 {
-				fmt.Print(strings.Repeat("\n", height-(height/2)-2))
+			if bottomHeight := height - 1 - positions[len(positions)-1][1]; bottomHeight > 0 {
+				fmt.Print(strings.Repeat("\n", bottomHeight-1))
 			}
+
 			time.Sleep(25 * time.Millisecond)
 		}
 	}
+}
+
+func booonFlies(line []rune, x, y int) {
+	fmt.Print("\x1b[" + strconv.Itoa(y) + ";1H")
+	if x == 0 {
+		fmt.Print(string(line) + "\n")
+	} else {
+		fmt.Print(string(line[x:]) + string(line[0:x]) + "\n")
+	}
+
 }
 
 func printJumpingShobon(height, width int) {
